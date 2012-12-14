@@ -17,7 +17,11 @@
  */
 enum elevator_status {halt,waiting,running};
 
-
+struct elevator_current_floor
+{
+	int floor;
+	int time_past;
+};
 /**
  * @brief	声明电梯类
  */
@@ -34,7 +38,7 @@ class CElevator
 		 * @param	speed_outin	上下乘客的速度
 		 * @param	capacity	电梯的载人上限
 		 */
-		CElevator(int kind,CBuilding* parent,int current_floor=1;int speed_running=elevator_speed_running,int speed_outin=elevator_speed_outin,int capacity=elevator_capacity):kind(kind),parent(parent),current_floor(current_floor),speed_running(speed_running),speed_outin(speed_outin),capacity(capacity);
+		CElevator(int kind,CBuilding* parent,int current_floor=1;int speed_running=elevator_speed_running,int speed_outin=elevator_speed_outin,int capacity=elevator_capacity):kind(kind),parent(parent),speed_running(speed_running),speed_outin(speed_outin),capacity(capacity);
 		~CElevator();
 		/**
 		 * @brief	电梯类实例化的数量
@@ -67,6 +71,22 @@ class CElevator
 		 * @brief	从挂起进入等待
 		 */
 		void startup();
+		/**
+		 * @brief	返回电梯当前的状态	
+		 *
+		 * @return	
+		 */
+		elevator_status getElevatorStatus();
+		/**
+		 * @brief	获取电梯当前的所在楼层
+		 *
+		 * @return	若处于整数楼层，则返回所在楼层,否则返回-1
+		 */
+		int getCurrentFloor();
+		/**
+		 * @brief	响应一个时钟周期，
+		 */
+		void onClock();
 	private:
 		/**
 		 * @brief	电梯标识
@@ -79,11 +99,11 @@ class CElevator
 		/**
 		 * @brief	电梯当前所在楼层
 		 */
-		int current_floor;
+		elevator_current_floor current_floor;
 		/**
-		 * @brief	下一个停靠楼层
+		 * @brief	需要停靠的楼层,需要停的为true,不需要停的为false
 		 */
-		int to_floor;
+		bool to_floor[max_floors];
 		/**
 		 * @brief	电梯所属建筑
 		 */

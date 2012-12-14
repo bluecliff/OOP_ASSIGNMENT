@@ -12,9 +12,11 @@ CElevator::CElevator(int kind,CBuilding* parent,int current_floor=1;int speed_ru
 	CElevator::count++;		//电梯实例增加1
 	this->id=count;		//电梯id
 	//初始状态
-	this->to_floor=current_floor;
+	this->current_floor.floor=current_floor;
+	this->current_floor.time_past=0;
 	this->status=halt;
 	this->direction=false;
+	memset(this->to_floor,0,sizeof(bool)*max_floors);
 	passengers.clear();
 }
 CElevator::~CElevator()
@@ -23,8 +25,10 @@ CElevator::~CElevator()
 }
 bool CElevator::in(int i)
 {
-	//向乘员队列中插入一个乘客
+	//向乘员队列中插入一个乘客,同时从该层等待队列中删除该人
 	this->passengers.push_back(i);
+	//更新停靠表
+	this->to_floor[parent->getPassengerById[i]->getDestination()]=true;
 	return true;
 }
 bool CElevator::out()
@@ -43,5 +47,68 @@ bool CElevator::out()
 		}
 		++first;
 	}
+	//该层从电梯停靠表中删除
+	this->to_floor[this->current_floor.floor]=false;
 	return false;
+}
+void CElevator::run()
+{
+	//电梯开始运行
+	if(this->status==waiting)
+	{
+		this->status=running;
+	}
+}
+void CElevator::haltdown()
+{
+	if(this->status==waiting)
+	{
+		this->status=halt;
+	}
+}
+void CElevator::stop()
+{
+	if(this->status==running)
+	{
+		this->status=waiting;
+	}
+}
+void CElevator::startup()
+{
+	if(this->status==haltdown)
+	{
+		this->status=waiting;
+	}
+}
+elevator_status CElevator::getElevatorStatus()
+{
+	return this->status;
+}
+int CElevator::getCurrentFloor()
+{
+	if(this->current_floor.time_past==0)
+	{
+		return this->current_floor.floor;
+	}
+	else
+	{
+		return -1;
+	}
+}
+//需要处理边界条件
+void CElevator::onClock()
+{
+	this->current_floor.time_past++;
+	this->current_floor.time_past%=elevator_speed_running;
+	if(this->current_floor.time_past==0)
+	{
+		if(this->direction)
+		{
+			this->current_floor.floor++;
+		}
+		else
+		{
+			this->current_floor.floor--;
+		}
+	}
 }
