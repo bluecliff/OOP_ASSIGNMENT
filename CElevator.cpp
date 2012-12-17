@@ -7,9 +7,9 @@
  */
 #include "CElevator.h"
 
+CElevator::count=0;
 CElevator::CElevator(int kind,CBuilding* parent,int current_floor=1;int speed_running=elevator_speed_running,int speed_outin=elevator_speed_outin,int capacity=elevator_capacity)
 {
-	CElevator::count++;		//电梯实例增加1
 	this->id=count;		//电梯id
 	//初始状态
 	this->current_floor.floor=current_floor;
@@ -18,6 +18,7 @@ CElevator::CElevator(int kind,CBuilding* parent,int current_floor=1;int speed_ru
 	this->direction=false;
 	memset(this->to_floor,0,sizeof(bool)*max_floors);
 	passengers.clear();
+	CElevator::count++;		//电梯实例增加1
 }
 CElevator::~CElevator()
 {
