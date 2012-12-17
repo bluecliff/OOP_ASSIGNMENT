@@ -26,7 +26,7 @@ CElevator::~CElevator()
 }
 bool CElevator::in(int i)
 {
-	//向乘员队列中插入一个乘客,同时从该层等待队列中删除该人
+	//向乘员队列中插入一个乘客
 	this->passengers.push_back(i);
 	//更新停靠表
 	this->to_floor[parent->getPassengerById[i]->getDestination()]=true;
