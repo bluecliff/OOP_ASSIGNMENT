@@ -12,7 +12,7 @@
 /**
  * @brief	最大人数
  */
-int passenger_max=1000;
+const int passenger_max=1000;
 /**
  * @brief	乘客在某一楼层停留的最大时间
  */
@@ -41,12 +41,12 @@ int elevator_capacity=10;
 /**
  * @brief	电梯数目
  */
-int elevator_count=10;
+const int elevator_count=10;
 
 /**
  * @brief	最大楼层
  */
-#define max_floors
+#define max_floors 40
 /**
  * @brief	电梯的种类
  */
